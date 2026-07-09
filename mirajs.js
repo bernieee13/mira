@@ -63,36 +63,7 @@ if (src === "location.png") {
   reminderTimeout2 = setTimeout(() => {
     locationReminder.classList.remove("show");
   }, 4000);
-
-}
-
-    // Only show Next if the invitation has been opened before
-    if (hasOpened) {
-      nextBtn.style.visibility =
-        currentClip < clips.length - 1 ? "visible" : "hidden";
-    } else {
-      nextBtn.style.visibility = "hidden";
-    }
-
-  } else {
-    // SHOW VIDEO, HIDE IMAGE
-    imageViewer.style.display = "none";
-    video.style.display = "block";
-    video.src = src;
-    video.load();
-    video.play();
-
-    nextBtn.style.visibility = "hidden";
-  }
-
-  // Previous button
-  if (hasOpened) {
-    prevBtn.style.visibility =
-      currentClip > 0 ? "visible" : "hidden";
-  } else {
-    prevBtn.style.visibility = "hidden";
-  }
-}
+}}}
 
 // SHOW NEXT BUTTON (video-only logic)
 video.addEventListener("timeupdate", () => {
