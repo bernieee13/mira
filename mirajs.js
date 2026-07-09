@@ -26,70 +26,100 @@ function isImage(src) {
   return /\.(png|jpe?g|gif|webp)$/i.test(src);
 }
 
-// Check if the invitation has been opened before
-const hasOpened = localStorage.getItem("miraInvitationOpened") === "true";
+// Read from localStorage
+let hasOpened = localStorage.getItem("miraInvitationOpened") === "true";
 
-// START VIDEO
+// PLAY BUTTON
 playButton.addEventListener("click", () => {
   playOverlay.style.display = "none";
-  video.play();
 
-  // Save that the invitation has been opened
+  hasOpened = true;
   localStorage.setItem("miraInvitationOpened", "true");
+
+  video.play();
 });
 
-// LOAD CLIPS
+// LOAD CLIP
 function loadClip(index) {
   currentClip = index;
   const src = clips[currentClip];
 
+  clearTimeout(reminderTimeout1);
+  clearTimeout(reminderTimeout2);
+  locationReminder.classList.remove("show");
+
+  // Update Previous button
+  prevBtn.style.visibility = currentClip > 0 ? "visible" : "hidden";
+
+  // Hide Next until allowed
+  nextBtn.style.visibility = "hidden";
+
   if (isImage(src)) {
-    clearTimeout(reminderTimeout1);
-clearTimeout(reminderTimeout2);
-locationReminder.classList.remove("show");
-    // SHOW IMAGE, HIDE VIDEO
+    // IMAGE
     video.pause();
     video.style.display = "none";
+
     imageViewer.src = src;
     imageViewer.style.display = "block";
 
-    // Show reminder only for location.png
-if (src === "location.png") {
+    // Show Next immediately for images except last
+    if (currentClip < clips.length - 1) {
+      nextBtn.style.visibility = "visible";
+    }
 
-  reminderTimeout1 = setTimeout(() => {
-    locationReminder.classList.add("show");
-  });
+    // Location reminder
+    if (src === "location.png") {
+      reminderTimeout1 = setTimeout(() => {
+        locationReminder.classList.add("show");
+      }, 100);
 
-  reminderTimeout2 = setTimeout(() => {
-    locationReminder.classList.remove("show");
-  }, 4000);
-}}}
+      reminderTimeout2 = setTimeout(() => {
+        locationReminder.classList.remove("show");
+      }, 4000);
+    }
+  } else {
+    // VIDEO
+    imageViewer.style.display = "none";
 
-// SHOW NEXT BUTTON (video-only logic)
+    video.style.display = "block";
+    video.src = src;
+    video.load();
+
+    if (hasOpened) {
+      video.play();
+    }
+  }
+}
+
+// VIDEO PROGRESS
 video.addEventListener("timeupdate", () => {
   if (!hasOpened) return;
 
   if (isImage(clips[currentClip])) return;
 
+  // Last clip
   if (currentClip === clips.length - 1) {
     nextBtn.style.visibility = "hidden";
     return;
   }
 
-  // Clip 1: show next at 27 seconds
-  if (currentClip === 0 && video.currentTime >= 27) {
-    nextBtn.style.visibility = "visible";
-  }
-
-  // Clips 2 onwards: show next during last 1 second
-  if (currentClip > 0) {
-    const remainingTime = video.duration - video.currentTime;
-
-    if (remainingTime <= 1) {
+  // Clip 1: show at 27 seconds
+  if (currentClip === 0) {
+    if (video.currentTime >= 27) {
       nextBtn.style.visibility = "visible";
     } else {
       nextBtn.style.visibility = "hidden";
     }
+    return;
+  }
+
+  // Other video clips: show during last second
+  const remainingTime = video.duration - video.currentTime;
+
+  if (remainingTime <= 1) {
+    nextBtn.style.visibility = "visible";
+  } else {
+    nextBtn.style.visibility = "hidden";
   }
 });
 
@@ -107,11 +137,12 @@ prevBtn.addEventListener("click", () => {
   }
 });
 
-// INITIAL BUTTON STATE
-if (hasOpened) {
-  prevBtn.style.visibility = currentClip > 0 ? "visible" : "hidden";
-  nextBtn.style.visibility = "hidden";
+// INITIAL STATE
+loadClip(0);
+
+if (!hasOpened) {
+  playOverlay.style.display = "flex";
 } else {
-  prevBtn.style.visibility = "hidden";
-  nextBtn.style.visibility = "hidden";
+  playOverlay.style.display = "none";
+  video.play();
 }
