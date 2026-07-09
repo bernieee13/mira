@@ -1,0 +1,269 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* BLURRED BACKGROUND */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: url("background.jpg") center/cover no-repeat;
+  filter: blur(10px);
+  transform: scale(1.1);
+  z-index: -2;
+}
+
+/* DARK OVERLAY FOR READABILITY */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: -1;
+}
+
+.video-container {
+  position: relative;
+
+  width: 100%;
+  max-width: 430px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  padding: 16px;
+}
+
+video {
+  width: 100%;
+  height: auto;
+
+  border-radius: 18px;
+  display: block;
+
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+}
+
+/* PLAY OVERLAY */
+#playOverlay {
+  position: absolute;
+  inset: 16px;
+  background: rgba(0, 0, 0, 0.35);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border-radius: 18px;
+}
+
+#imageViewer {
+  width: 100%;
+  height: auto;
+  border-radius: 18px;
+  display: block;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+}
+
+/* ===== MAGICAL FAIRYTALE PLAY BUTTON ===== */
+#playButton {
+  width: 86px;
+  height: 86px;
+  border-radius: 50%;
+
+  border: 3px solid #f5d98b;
+  font-family: 'Cinzel Decorative', 'Georgia', serif;
+  font-size: 24px;
+  cursor: pointer;
+
+  background: radial-gradient(circle at 35% 30%, #ffe9b3 0%, #d9a441 45%, #7c4fbf 100%);
+  color: #2b1a4a;
+
+  box-shadow:
+    0 0 12px 4px rgba(255, 223, 128, 0.55),
+    0 0 30px 6px rgba(147, 92, 226, 0.45),
+    inset 0 0 10px rgba(255, 255, 255, 0.6);
+
+  position: relative;
+  overflow: visible;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+#playButton::before {
+  content: "✦";
+  position: absolute;
+  top: -10px;
+  right: -6px;
+  font-size: 16px;
+  color: #ffe9b3;
+  text-shadow: 0 0 6px rgba(255, 223, 128, 0.9);
+  animation: sparkle-twinkle 1.8s ease-in-out infinite;
+}
+
+#playButton::after {
+  content: "✧";
+  position: absolute;
+  bottom: -8px;
+  left: -8px;
+  font-size: 12px;
+  color: #d9b3ff;
+  text-shadow: 0 0 6px rgba(217, 179, 255, 0.9);
+  animation: sparkle-twinkle 1.8s ease-in-out infinite 0.6s;
+}
+
+#playButton:hover {
+  transform: scale(1.08);
+  box-shadow:
+    0 0 18px 6px rgba(255, 223, 128, 0.75),
+    0 0 40px 10px rgba(147, 92, 226, 0.6),
+    inset 0 0 12px rgba(255, 255, 255, 0.75);
+}
+
+@keyframes sparkle-twinkle {
+  0%, 100% { opacity: 0.4; transform: scale(0.8) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1.15) rotate(15deg); }
+}
+
+/* NAVIGATION BUTTONS */
+.buttons {
+  position: absolute;
+
+  bottom: 40px; /* INSIDE VIDEO */
+
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: calc(100% - 48px);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  pointer-events: none;
+}
+
+/* ===== MAGICAL FAIRYTALE NAV BUTTONS ===== */
+.buttons button {
+  width: 110px;
+  height: 46px;
+
+  border: 2px solid #f5d98b;
+  border-radius: 999px;
+
+  background: linear-gradient(135deg, #6a3fb5 0%, #9b6fd9 50%, #6a3fb5 100%);
+  color: #fff2d6;
+
+  font-family: 'Georgia', 'Times New Roman', serif;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-shadow: 0 0 6px rgba(255, 223, 128, 0.6);
+
+  cursor: pointer;
+  pointer-events: auto;
+
+  box-shadow:
+    0 0 8px rgba(155, 111, 217, 0.6),
+    inset 0 0 6px rgba(255, 255, 255, 0.25);
+
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.buttons button:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: linear-gradient(135deg, #7c4fcf 0%, #b98af0 50%, #7c4fcf 100%);
+  box-shadow:
+    0 0 14px rgba(255, 223, 128, 0.7),
+    0 0 22px rgba(155, 111, 217, 0.7),
+    inset 0 0 8px rgba(255, 255, 255, 0.4);
+}
+
+.buttons button:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/*#nextBtn,
+#prevBtn {
+  display: hidden;
+}
+
+/* ===== FAIRYTALE LOCATION REMINDER ===== */
+#locationReminder {
+  position: absolute;
+  left: 50%;
+  bottom: 85px;
+  transform: translateX(-50%) translateY(15px);
+
+  width: calc(100% - 40px);
+  max-width: 360px;
+
+  padding: 14px 18px;
+
+  background: rgba(90, 56, 150, 0.92);
+  border: 2px solid #f5d98b;
+  border-radius: 18px;
+
+  color: #fff8ea;
+  font-family: "Georgia", serif;
+  font-size: 14px;
+  line-height: 1.5;
+  text-align: center;
+
+  text-shadow: 0 0 5px rgba(255,223,128,.6);
+
+  box-shadow:
+      0 0 16px rgba(255,223,128,.35),
+      0 0 24px rgba(155,111,217,.35);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transition: opacity .6s ease, transform .6s ease;
+
+  z-index: 20;
+}
+
+#locationReminder.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+
+
+/* SMALL PHONE ADJUSTMENT */
+@media (max-width: 380px) {
+  .video-container {
+    padding: 10px;
+  }
+
+  #playOverlay {
+    inset: 10px;
+  }
+
+  .buttons {
+    bottom: 24px;
+    width: calc(100% - 32px);
+  }
+
+  .buttons button {
+    width: 96px;
+    height: 42px;
+    font-size: 13px;
+  }
+
+}

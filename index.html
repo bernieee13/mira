@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mira's 1st Birthday Invitation</title>
+  <link rel="stylesheet" href="miracss.css">
+</head>
+<body>
+<div class="video-container">
+
+  <video id="videoPlayer" playsinline>
+    <source src="clip1.mp4" type="video/mp4">
+  </video>
+
+  <img id="imageViewer" style="display:none;">
+
+  <!-- PLAY SCREEN -->
+  <div id="playOverlay">
+    <button id="playButton">▶ Play</button>
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="buttons">
+    <button id="prevBtn">Previous</button>
+    <button id="nextBtn">Next</button>
+  </div>
+  
+<div id="locationReminder">
+  ✨ Kindly take a screenshot of this location for your future reference. ✨
+</div>
+</div>
+<script src="mirajs.js"></script>
+</body>
+</html>
