@@ -12,119 +12,92 @@ const locationReminder = document.getElementById("locationReminder");
 let reminderTimeout1;
 let reminderTimeout2;
 
-const clips = [
+const slides = [
   "clip1.mp4",
-  "clip2.mp4",
-  "clip3.mp4",
   "location.png",
-  "invitation.png",
+  "invitation.png"
 ];
 
-let currentClip = 0;
+let currentSlide = 0;
 
 function isImage(src) {
   return /\.(png|jpe?g|gif|webp)$/i.test(src);
 }
 
-// START VIDEO
+// Play button
 playButton.addEventListener("click", () => {
   playOverlay.style.display = "none";
   video.play();
 });
 
-// LOAD CLIPS
-function loadClip(index) {
-  currentClip = index;
-  const src = clips[currentClip];
+// Load slide
+function loadSlide(index) {
+  currentSlide = index;
+  const src = slides[currentSlide];
 
-  // Clear reminder every time we change clips
   clearTimeout(reminderTimeout1);
   clearTimeout(reminderTimeout2);
   locationReminder.classList.remove("show");
 
   if (isImage(src)) {
-    // SHOW IMAGE, HIDE VIDEO
+    // Show image
     video.pause();
     video.style.display = "none";
+
     imageViewer.src = src;
     imageViewer.style.display = "block";
 
-    // Show reminder only for location.png
+    // Show reminder only on location image
     if (src === "location.png") {
       reminderTimeout1 = setTimeout(() => {
         locationReminder.classList.add("show");
-      }, 3000);
+      }, 1000);
 
       reminderTimeout2 = setTimeout(() => {
         locationReminder.classList.remove("show");
-      }, 7000);
+      }, 5000);
     }
 
-    // Show Next immediately on images (except last)
+    // Navigation buttons
+    prevBtn.style.visibility = currentSlide > 0 ? "visible" : "hidden";
     nextBtn.style.visibility =
-      currentClip < clips.length - 1 ? "visible" : "hidden";
+      currentSlide < slides.length - 1 ? "visible" : "hidden";
 
   } else {
-    // SHOW VIDEO, HIDE IMAGE
+    // Show video
     imageViewer.style.display = "none";
+
     video.style.display = "block";
     video.src = src;
     video.load();
     video.play();
 
-    // Hide Next until it's time to show it
+    // Hide buttons while video plays
+    prevBtn.style.visibility = "hidden";
     nextBtn.style.visibility = "hidden";
   }
-
-  // Previous button
-  prevBtn.style.visibility =
-    currentClip > 0 ? "visible" : "hidden";
 }
 
-// SHOW NEXT BUTTON (video-only logic)
-video.addEventListener("timeupdate", () => {
-  if (isImage(clips[currentClip])) return;
-
-  if (currentClip === clips.length - 1) {
-    nextBtn.style.visibility = "hidden";
-    return;
-  }
-
-  // Clip 1: show next at 27 seconds
-  if (currentClip === 0) {
-    if (video.currentTime >= 27) {
-      nextBtn.style.visibility = "visible";
-    } else {
-      nextBtn.style.visibility = "hidden";
-    }
-  }
-
-  // Clip 2 & 3: show during last second
-  if (currentClip > 0) {
-    const remainingTime = video.duration - video.currentTime;
-
-    if (remainingTime <= 1) {
-      nextBtn.style.visibility = "visible";
-    } else {
-      nextBtn.style.visibility = "hidden";
-    }
-  }
+// When video ends, show both buttons
+video.addEventListener("ended", () => {
+  prevBtn.style.visibility = currentSlide > 0 ? "visible" : "hidden";
+  nextBtn.style.visibility =
+    currentSlide < slides.length - 1 ? "visible" : "hidden";
 });
 
-// NEXT
+// Next
 nextBtn.addEventListener("click", () => {
-  if (currentClip < clips.length - 1) {
-    loadClip(currentClip + 1);
+  if (currentSlide < slides.length - 1) {
+    loadSlide(currentSlide + 1);
   }
 });
 
-// PREVIOUS
+// Previous
 prevBtn.addEventListener("click", () => {
-  if (currentClip > 0) {
-    loadClip(currentClip - 1);
+  if (currentSlide > 0) {
+    loadSlide(currentSlide - 1);
   }
 });
 
-// INITIAL BUTTON STATE
-prevBtn.style.visibility = "hidden";
-nextBtn.style.visibility = "hidden";
+// Start with the video
+loadSlide(0);
